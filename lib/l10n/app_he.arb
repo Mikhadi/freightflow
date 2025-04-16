@@ -1,0 +1,19 @@
+{
+  "@@locale": "he",
+  "app_name": "FreightFlow",
+  "welcome_to": "ברוך הבא ל",
+  "email": "אימייל",
+  "password": "סיסמה",
+  "sign_in": "כניסה",
+  "create_account": "הרשמה",
+  "user_name": "שם משתמש",
+  "settings": "הגדרות",
+  "log_out": "התנתק",
+  "language": "שפה",
+  "english": "אנגלית",
+  "hebrew": "עברית",
+  "home": "בית",
+  "history": "היסטוריה",
+  "search": "חיפוש",
+  "profile": "פרופיל"
+}
