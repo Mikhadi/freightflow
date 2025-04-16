@@ -15,5 +15,14 @@
   "home": "Home",
   "history": "History",
   "search": "Search",
-  "profile": "Profile"
+  "profile": "Profile",
+  "select_make": "Select a make",
+  "select_model": "Select a model",
+  "vin": "Vin",
+  "plate_num": "Plate",
+  "close_order": "Close Order",
+  "send": "Send",
+  "sending": "Sending...",
+  "sended_succesfully": "Sended succesfully",
+  "cars": "Cars"
 }

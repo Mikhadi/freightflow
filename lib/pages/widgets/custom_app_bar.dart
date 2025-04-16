@@ -16,7 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: CircleAvatar(backgroundColor: greenColor, child: Text("U")),
       ),
-      title: Text(AppLocalizations.of(context)!.user_name),
+      title: Text(AppLocalizations.of(context)!.user_name, style: textStyle,),
       actions: [
         PopupMenuButton(
           icon: Icon(Icons.more_vert),

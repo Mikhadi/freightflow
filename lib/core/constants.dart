@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const Color greenColor = Color.fromRGBO(29, 97, 231, 1);
 const Color greyColor = Color.fromARGB(255, 233, 233, 233);
@@ -14,14 +15,14 @@ const double coffeeSmallIce = 20;
 const double coffeeMediumIce = 35;
 const double coffeeLargeIce = 50;
 
-TextStyle textStyle = const TextStyle(
+TextStyle textStyle = GoogleFonts.rubik(
   color: Colors.black,
   fontSize: 18,
 );
-TextStyle textStyle2 = const TextStyle(
+TextStyle textStyle2 = GoogleFonts.rubik(
   color: Colors.white,
   fontSize: 18,
-  fontWeight: FontWeight.bold,
+  fontWeight: FontWeight.w600,
 );
 
 MaterialColor materialColor = MaterialColor(0XFF28bc6c, color);

@@ -15,5 +15,14 @@
   "home": "בית",
   "history": "היסטוריה",
   "search": "חיפוש",
-  "profile": "פרופיל"
+  "profile": "פרופיל",
+  "select_make": "בחר יצרן",
+  "select_model": "בחר דגם",
+  "vin": "שלדה",
+  "plate_num": "רישוי",
+  "close_order": "סגור הזמנה",
+  "send": "שלח",
+  "sending": "שולח...",
+  "sended_succesfully": "נשלח בהצלחה",
+  "cars": "רכבים"
 }

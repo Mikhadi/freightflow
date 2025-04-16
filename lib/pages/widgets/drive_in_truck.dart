@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DriveInTruck extends StatefulWidget {
+  const DriveInTruck({super.key});
+
   @override
   _DriveInTruckState createState() => _DriveInTruckState();
 }
