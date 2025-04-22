@@ -14,6 +14,7 @@ class VehicleCard extends StatefulWidget {
   final bool isVin;
   final bool imageError;
   final Function(bool) onToggleVinChanged;
+  final Map<String, List<Map<String, dynamic>>> manufacturersData;
   const VehicleCard({
     super.key,
     required this.formKey,
@@ -22,6 +23,7 @@ class VehicleCard extends StatefulWidget {
     required this.isVin,
     required this.imageError,
     required this.onToggleVinChanged,
+    required this.manufacturersData,
   });
 
   @override
@@ -29,12 +31,8 @@ class VehicleCard extends StatefulWidget {
 }
 
 class _VehicleCardState extends State<VehicleCard> {
-  final Map<String, List<String>> models = {
-    "Kia": ["Picanto", "Sportage", "Stonic", "Ceed", "Niro", "EV6", "EV9", "Seltos"],
-    "KGM": ["Rexton", "Torres", "Musso"],
-    "Seres": ["M5", "5", "3"],
-    "Other": ["Other"],
-  };
+  List<String>? manufacturers;
+  List<String>? models;
 
   final ImagePicker picker = ImagePicker();
 
@@ -52,6 +50,11 @@ class _VehicleCardState extends State<VehicleCard> {
 
   @override
   Widget build(BuildContext context) {
+    manufacturers = widget.manufacturersData.keys.toList();
+    List<Map<String, dynamic>> selectedModels =
+        widget.manufacturersData[widget.vehicle.make] ?? [];
+    models = selectedModels.map((e) => e['model'].toString()).toList();
+
     return Form(
       key: widget.formKey,
       child: Container(
@@ -65,24 +68,19 @@ class _VehicleCardState extends State<VehicleCard> {
           spacing: 10,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 20,
               children: [
                 Expanded(
                   child: DropdownButtonFormField<String>(
                     hint: Text(AppLocalizations.of(context)!.select_make),
                     value: widget.vehicle.make,
                     items:
-                        models.keys.map((String make) {
+                        (manufacturers ?? []).map((String make) {
                           return DropdownMenuItem<String>(
                             value: make,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.circle_rounded,
-                                  color: Colors.indigo,
-                                ),
+                                Icon(Icons.circle_rounded, color: Colors.indigo),
                                 const SizedBox(width: 10),
                                 Text(make),
                               ],
@@ -108,9 +106,14 @@ class _VehicleCardState extends State<VehicleCard> {
                     ),
                     borderRadius: BorderRadius.circular(12),
                     dropdownColor: Colors.lightGreen[100],
+                    menuMaxHeight: MediaQuery.sizeOf(context).height/3,
                     validator: (value) => value == null ? '' : null,
                   ),
                 ),
+              ],
+            ),
+            Row(
+              children: [
                 Expanded(
                   child:
                       widget.vehicle.make == "Other"
@@ -131,17 +134,13 @@ class _VehicleCardState extends State<VehicleCard> {
                                     value == null || value.isEmpty ? '' : null,
                           )
                           : DropdownButtonFormField<String>(
-                            hint: Text(
-                              AppLocalizations.of(context)!.select_model,
-                            ),
+                            hint: Text(AppLocalizations.of(context)!.select_model),
                             value: widget.vehicle.model,
                             items:
-                                (models[widget.vehicle.make] ?? []).map((
-                                  String model,
-                                ) {
+                                (models ?? []).map((String model) {
                                   return DropdownMenuItem<String>(
                                     value: model,
-                                    child: Text(model),
+                                    child: Text(model, overflow: TextOverflow.ellipsis),
                                   );
                                 }).toList(),
                             onChanged: (String? value) {
@@ -162,6 +161,7 @@ class _VehicleCardState extends State<VehicleCard> {
                             ),
                             borderRadius: BorderRadius.circular(12),
                             dropdownColor: Colors.lightGreen[100],
+                            menuMaxHeight: MediaQuery.sizeOf(context).height/3,
                             validator: (value) => value == null ? '' : null,
                           ),
                 ),
@@ -174,7 +174,6 @@ class _VehicleCardState extends State<VehicleCard> {
                 ToggleButtons(
                   isSelected: [widget.isVin, !widget.isVin],
                   onPressed: (index) {
-                    //hyphenController.clear();
                     if (index == 0) {
                       if (hyphenController.text.length > 6) {
                         hyphenController.text = hyphenController.rawText
@@ -204,7 +203,9 @@ class _VehicleCardState extends State<VehicleCard> {
                   child: TextFormField(
                     controller: hyphenController,
                     inputFormatters:
-                        widget.isVin ? [VinNumInputFormatter()] : [PlateNumInputFormatter()],
+                        widget.isVin
+                            ? [VinNumInputFormatter()]
+                            : [PlateNumInputFormatter()],
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       counterText: "",

@@ -4,6 +4,7 @@ import 'package:freiightflow/classes/vehicle_class.dart';
 import 'package:freiightflow/pages/order_summary.dart';
 import 'package:freiightflow/pages/widgets/vehicle_card.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:freiightflow/services/manufacturers_data_service.dart';
 
 class OrderPage extends StatefulWidget {
   final Order order;
@@ -19,6 +20,7 @@ class _OrderPageState extends State<OrderPage> {
   final List<bool> _isVinFlags = [];
   final List<GlobalKey<FormState>> _formKeys = [];
   final List<bool> _showImageErrors = [];
+  Map<String, List<Map<String, dynamic>>>? manufacturersData;
 
   void _validateAllSections() {
     bool allValid = true;
@@ -38,14 +40,25 @@ class _OrderPageState extends State<OrderPage> {
     if (allValid) {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => OrderSummary(order: widget.order, vehicles: _vehicles),
+          builder:
+              (_) => OrderSummary(order: widget.order, vehicles: _vehicles),
         ),
       );
     } else {
-      setState(() {
-        
-      });
+      setState(() {});
     }
+  }
+
+  Future<void> _loadData() async {
+    manufacturersData = await ManufacturersDataService().getCarData();
+
+    setState(() {}); // Notify Flutter to rebuild the UI
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
   }
 
   @override
@@ -62,16 +75,7 @@ class _OrderPageState extends State<OrderPage> {
             Text(widget.order.to),
           ],
         ),
-      ),
-      persistentFooterButtons: [
-        TextButton(
-          onPressed: () {
-            _validateAllSections();
-          },
-          child: Text(AppLocalizations.of(context)!.close_order),
-        ),
-      ],
-      persistentFooterAlignment: AlignmentDirectional.center,
+      ),      
       body: Column(
         children: [
           Expanded(
@@ -90,6 +94,7 @@ class _OrderPageState extends State<OrderPage> {
                         _isVinFlags[index] = value;
                       });
                     },
+                    manufacturersData: manufacturersData ?? {},
                   );
                 } else {
                   return Visibility(
@@ -126,6 +131,21 @@ class _OrderPageState extends State<OrderPage> {
                 }
               },
             ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+            ),
+            child: 
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: TextButton(
+                  onPressed: () {
+                    _validateAllSections();
+                  },
+                  child: Text(AppLocalizations.of(context)!.close_order),
+                ),
+              ),
           ),
         ],
       ),

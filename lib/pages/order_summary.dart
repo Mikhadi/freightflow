@@ -8,7 +8,6 @@ import 'package:freiightflow/pages/nav_page.dart';
 import 'package:slide_action/slide_action.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class OrderSummary extends StatefulWidget {
   final Order order;
   final List<Vehicle> vehicles;
@@ -19,7 +18,6 @@ class OrderSummary extends StatefulWidget {
 }
 
 class _OrderSummaryState extends State<OrderSummary> {
-
   String formatPlate(String? plateNum) {
     if (plateNum == null) return '';
 
@@ -35,87 +33,98 @@ class _OrderSummaryState extends State<OrderSummary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.separated(
-        itemBuilder: (context, index) {
-          bool isVin = widget.vehicles[index].vin != null;
-          return ListTile(
-            title: Text(
-              "${widget.vehicles[index].make} ${widget.vehicles[index].model}",
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.separated(
+              itemBuilder: (context, index) {
+                bool isVin = widget.vehicles[index].vin != null;
+                return ListTile(
+                  title: Text(
+                    "${widget.vehicles[index].make} ${widget.vehicles[index].model}",
+                  ),
+                  subtitle: Text(
+                    "${isVin == true ? AppLocalizations.of(context)!.vin : AppLocalizations.of(context)!.plate_num} ${isVin == true ? widget.vehicles[index].vin : formatPlate(widget.vehicles[index].plateNumber)}",
+                  ),
+                  leading: Text((index + 1).toString()),
+                  trailing:
+                      widget.vehicles[index].image is File
+                          ? Image.file(
+                            widget.vehicles[index].image as File,
+                            height: 100,
+                          )
+                          : null,
+                );
+              },
+              separatorBuilder: (context, index) {
+                return Divider();
+              },
+              itemCount: widget.vehicles.length,
             ),
-            subtitle: Text(
-              "${isVin == true ? AppLocalizations.of(context)!.vin : AppLocalizations.of(context)!.plate_num} ${isVin == true ? widget.vehicles[index].vin : formatPlate(widget.vehicles[index].plateNumber)}",
-            ),
-            leading: Text((index + 1).toString()),
-            trailing:
-                widget.vehicles[index].image is File
-                    ? Image.file(
-                      widget.vehicles[index].image as File,
-                      height: 100,
-                    )
-                    : null,
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider();
-        },
-        itemCount: widget.vehicles.length,
-      ),
-      persistentFooterButtons: [
-        SlideAction(
-          stretchThumb: true,
-          rightToLeft: localeNotifier.value.languageCode == "he",
-          trackBuilder: (context, state) {
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.white,
-                boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 8),
-                ],
-              ),
-              child: Center(child: Text(AppLocalizations.of(context)!.send)),
-            );
-          },
-          thumbBuilder: (context, state) {
-            return Container(
-              margin: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Center(
-                // Show loading indicator if async operation is being performed
-                child:
-                    state.isPerformingAction
-                        ? Text(
-                          AppLocalizations.of(context)!.sending,
-                          style: TextStyle(color: Colors.white),
-                        )
-                        : const Icon(Icons.chevron_right, color: Colors.white),
-              ),
-            );
-          },
-          action: () async {
-            // Async operation
-            await Future.delayed(const Duration(seconds: 2));
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  content: Center(child: Text(AppLocalizations.of(context)!.sended_succesfully)),
-                  duration: Duration(seconds: 2),
-                  backgroundColor: Colors.blueGrey,
+          ),
+          SlideAction(
+            stretchThumb: true,
+            rightToLeft: localeNotifier.value.languageCode == "he",
+            trackBuilder: (context, state) {
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(color: Colors.black26, blurRadius: 8),
+                  ],
+                ),
+                child: Center(child: Text(AppLocalizations.of(context)!.send)),
+              );
+            },
+            thumbBuilder: (context, state) {
+              return Container(
+                margin: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  // Show loading indicator if async operation is being performed
+                  child:
+                      state.isPerformingAction
+                          ? Text(
+                            AppLocalizations.of(context)!.sending,
+                            style: TextStyle(color: Colors.white),
+                          )
+                          : const Icon(
+                            Icons.chevron_right,
+                            color: Colors.white,
+                          ),
                 ),
               );
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => NavPage()),
-                (Route<dynamic> route) => false,
-              );
-            }
-          },
-        ),
-      ],
+            },
+            action: () async {
+              // Async operation
+              await Future.delayed(const Duration(seconds: 2));
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    content: Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.sended_succesfully,
+                      ),
+                    ),
+                    duration: Duration(seconds: 2),
+                    backgroundColor: Colors.blueGrey,
+                  ),
+                );
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => NavPage()),
+                  (Route<dynamic> route) => false,
+                );
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }
