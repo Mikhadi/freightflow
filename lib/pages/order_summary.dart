@@ -19,37 +19,46 @@ class OrderSummary extends StatefulWidget {
 }
 
 class _OrderSummaryState extends State<OrderSummary> {
+
+  String formatPlate(String? plateNum) {
+    if (plateNum == null) return '';
+
+    if (plateNum.length == 7) {
+      return '${plateNum.substring(0, 2)}-${plateNum.substring(2, 5)}-${plateNum.substring(5, 7)}';
+    } else if (plateNum.length == 8) {
+      return '${plateNum.substring(0, 3)}-${plateNum.substring(3, 5)}-${plateNum.substring(5, 8)}';
+    }
+
+    return plateNum; // fallback: return raw if length doesn't match
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        children: [
-          ListView.separated(
-            itemBuilder: (context, index) {
-              bool isVin = widget.vehicles[index].vin != null;
-              return ListTile(
-                title: Text(
-                  "${widget.vehicles[index].make} ${widget.vehicles[index].model}",
-                ),
-                subtitle: Text(
-                  "${isVin == true ? AppLocalizations.of(context)!.vin : AppLocalizations.of(context)!.plate_num} ${isVin == true ? widget.vehicles[index].vin : widget.vehicles[index].plateNumber}",
-                ),
-                leading: Text((index + 1).toString()),
-                trailing:
-                    widget.vehicles[index].image is File
-                        ? Image.file(
-                          widget.vehicles[index].image as File,
-                          height: 100,
-                        )
-                        : null,
-              );
-            },
-            separatorBuilder: (context, index) {
-              return Divider();
-            },
-            itemCount: widget.vehicles.length,
-          ),
-        ],
+      body: ListView.separated(
+        itemBuilder: (context, index) {
+          bool isVin = widget.vehicles[index].vin != null;
+          return ListTile(
+            title: Text(
+              "${widget.vehicles[index].make} ${widget.vehicles[index].model}",
+            ),
+            subtitle: Text(
+              "${isVin == true ? AppLocalizations.of(context)!.vin : AppLocalizations.of(context)!.plate_num} ${isVin == true ? widget.vehicles[index].vin : formatPlate(widget.vehicles[index].plateNumber)}",
+            ),
+            leading: Text((index + 1).toString()),
+            trailing:
+                widget.vehicles[index].image is File
+                    ? Image.file(
+                      widget.vehicles[index].image as File,
+                      height: 100,
+                    )
+                    : null,
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+        itemCount: widget.vehicles.length,
       ),
       persistentFooterButtons: [
         SlideAction(
@@ -92,10 +101,10 @@ class _OrderSummaryState extends State<OrderSummary> {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  
                   behavior: SnackBarBehavior.floating,
-                  content: Text(AppLocalizations.of(context)!.sended_succesfully),
+                  content: Center(child: Text(AppLocalizations.of(context)!.sended_succesfully)),
                   duration: Duration(seconds: 2),
+                  backgroundColor: Colors.blueGrey,
                 ),
               );
               Navigator.pushAndRemoveUntil(
