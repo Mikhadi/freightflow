@@ -162,7 +162,10 @@ class _VehicleCardState extends State<VehicleCard> {
                             borderRadius: BorderRadius.circular(12),
                             dropdownColor: Colors.lightGreen[100],
                             menuMaxHeight: MediaQuery.sizeOf(context).height/3,
-                            validator: (value) => value == null ? '' : null,
+                            validator: (value) {
+                              if(widget.vehicle.make == "Other") return null;
+                              return value == null ? '' : null;
+                            },
                           ),
                 ),
               ],
