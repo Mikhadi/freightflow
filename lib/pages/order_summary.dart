@@ -72,7 +72,10 @@ class _OrderSummaryState extends State<OrderSummary> {
                 );
               },
               separatorBuilder: (context, index) {
-                return Divider();
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Divider(),
+                );
               },
               itemCount: widget.vehicles.length,
             ),
@@ -119,7 +122,7 @@ class _OrderSummaryState extends State<OrderSummary> {
               action: () async {
                 // Async operation
                 await Future.delayed(const Duration(seconds: 2));
-                if (mounted) {
+                if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       behavior: SnackBarBehavior.floating,

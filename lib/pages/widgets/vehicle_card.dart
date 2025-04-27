@@ -30,13 +30,13 @@ class VehicleCard extends StatefulWidget {
   State<VehicleCard> createState() => _VehicleCardState();
 }
 
-class _VehicleCardState extends State<VehicleCard> {
+class _VehicleCardState extends State<VehicleCard> with AutomaticKeepAliveClientMixin{
   List<String>? manufacturers;
   List<String>? models;
 
   final ImagePicker picker = ImagePicker();
 
-  final hyphenController = HyphenTextController();
+  late HyphenTextController hyphenController;
 
   Future<void> pickImage(ImageSource source) async {
     final pickedFile = await picker.pickImage(source: source, imageQuality: 75);
@@ -49,7 +49,24 @@ class _VehicleCardState extends State<VehicleCard> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    hyphenController = HyphenTextController(text: widget.isVin ? widget.vehicle.vin ?? "" : widget.vehicle.plateNumber ?? "");
+  }
+
+  @override
+  void dispose() {
+    hyphenController.dispose();
+    super.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     manufacturers = widget.manufacturersData.keys.toList();
     List<Map<String, dynamic>> selectedModels =
         widget.manufacturersData[widget.vehicle.make] ?? [];

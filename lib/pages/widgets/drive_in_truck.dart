@@ -4,7 +4,7 @@ class DriveInTruck extends StatefulWidget {
   const DriveInTruck({super.key});
 
   @override
-  _DriveInTruckState createState() => _DriveInTruckState();
+  State<DriveInTruck> createState() => _DriveInTruckState();
 }
 
 class _DriveInTruckState extends State<DriveInTruck>
