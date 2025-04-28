@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freiightflow/core/constants.dart';
+import 'package:freiightflow/newHomePage/presentation/new_home_page.dart';
 import 'package:freiightflow/notifiers/locale_notifier.dart';
-import 'package:freiightflow/pages/welcome_page.dart';
+// import 'package:freiightflow/pages/welcome_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -10,7 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadSavedLocale();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           debugShowCheckedModeBanner: false,
-          home: WelcomePage(),
+          home: NewHomePage(),
           theme: ThemeData(
             appBarTheme: const AppBarTheme(
               backgroundColor: Colors.transparent,
